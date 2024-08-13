@@ -1,24 +1,14 @@
 import axios from 'axios';
 
-const imdb_api = 'dedb1911';
-const url = "http://www.omdbapi.com/?apikey=[dedb1911]&";
+const omdb_api = 'dedb1911';
+const baseURL = 'http://www.omdbapi.com/';
 
-export const searchMovies = async(query) => {
-    try{
-
-  const response = await axios.get(`${url}&s=${query}`)
-  return response.data;
-    }catch (error){
-        console.log("error")
-    }
-}
-
-export const getMovieDetails = async (imdbID) => {
+export const searchMovies = async (query) => {
   try {
-    const response = await axios.get(`${url}&i=${imdbID}`);
+    const response = await axios.get(`${baseURL}?s=${query}&apikey=${omdb_api}`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching movie details:', error);
-    throw error;
+    console.error('Search error:', error);
+    return [];
   }
 };

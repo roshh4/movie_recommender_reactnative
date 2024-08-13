@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, FlatList, Text } from 'react-native';
-import { searchMovies } from './code/backend/imdbApi';
+import { View, TextInput, Button, FlatList, Text, StyleSheet } from 'react-native';
+import { searchMovies } from '../backend/imdbApi';
 
-const SearchPage = ({ navigation }) => {
+const SearchPage = () => {
   const [query, setQuery] = useState('');
   const [movies, setMovies] = useState([]);
 
@@ -16,30 +16,38 @@ const SearchPage = ({ navigation }) => {
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       <TextInput
         placeholder="Search for a movie"
         value={query}
         onChangeText={setQuery}
-        style={{ borderWidth: 1, padding: 10, marginBottom: 10 }}
+        style={styles.input}
       />
       <Button title="Search" onPress={handleSearch} />
-
       <FlatList
         data={movies}
         keyExtractor={(item) => item.imdbID}
         renderItem={({ item }) => (
-          <View>
-            <Text>{item.Title} ({item.Year})</Text>
-            <Button
-              title="View Details"
-              onPress={() => navigation.navigate('MovieDetailsPage', { imdbID: item.imdbID })}
-            />
-          </View>
+          <Text style={styles.movieTitle}>{item.Title}</Text>
         )}
       />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+  },
+  input: {
+    borderWidth: 1,
+    padding: 10,
+    marginBottom: 10,
+  },
+  movieTitle: {
+    padding: 10,
+    fontSize: 16,
+  },
+});
 
 export default SearchPage;
