@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, FlatList, Text, StyleSheet } from 'react-native';
+import { View, TextInput, Button, FlatList, Text, StyleSheet, Image } from 'react-native';
 import { searchMovies } from '../backend/imdbApi';
 
 const SearchPage = () => {
@@ -28,7 +28,13 @@ const SearchPage = () => {
         data={movies}
         keyExtractor={(item) => item.imdbID}
         renderItem={({ item }) => (
-          <Text style={styles.movieTitle}>{item.Title}</Text>
+          <View style={styles.movieItem}>
+            <Image
+              source={{ uri: item.Poster }}
+              style={styles.poster}
+            />
+            <Text style={styles.movieTitle}>{item.Title}</Text>
+          </View>
         )}
       />
     </View>
@@ -44,9 +50,19 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
   },
+  movieItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  poster: {
+    width: 50,
+    height: 75,
+    marginRight: 10,
+  },
   movieTitle: {
-    padding: 10,
     fontSize: 16,
+    flexShrink: 1,
   },
 });
 
