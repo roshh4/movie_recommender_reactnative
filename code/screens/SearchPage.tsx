@@ -27,6 +27,7 @@ const SearchPage = () => {
       <FlatList
         data={movies}
         keyExtractor={(item) => item.imdbID}
+        numColumns={2}
         renderItem={({ item }) => (
           <View style={styles.movieItem}>
             <Image
@@ -51,18 +52,18 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   movieItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
+    flex: 1,  /* Ensure items take up equal space */
+    margin: 10,  /* Add some margin between items */
+    alignItems: 'center',  /* Center items horizontally */
   },
   poster: {
-    width: 50,
-    height: 75,
-    marginRight: 10,
+    width: 150,
+    height: 225,
   },
   movieTitle: {
     fontSize: 16,
-    flexShrink: 1,
+    textAlign: 'center',  /* Center text under the image */
+    marginTop: 10,
   },
 });
 
