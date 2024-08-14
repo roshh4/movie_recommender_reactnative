@@ -52,9 +52,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   movieItem: {
-    flex: 1,  /* Ensure items take up equal space */
-    margin: 10,  /* Add some margin between items */
-    alignItems: 'center',  /* Center items horizontally */
+    flex: 1,
+    margin: 10,
+    alignItems: 'center',
   },
   poster: {
     width: 150,
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   },
   movieTitle: {
     fontSize: 16,
-    textAlign: 'center',  /* Center text under the image */
+    textAlign: 'center',
     marginTop: 10,
   },
 });
