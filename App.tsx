@@ -1,19 +1,22 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Icon from 'react-native-vector-icons/Ionicons'; // Import Ionicons or any other icon set
+import { Text, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-import HomePage from './code/screens/HomePage';
-import SearchPage from './code/screens/SearchPage';
-import WishlistPage from './code/screens/WishlistPage';
-import MoviesDetailsPage from './code/screens/MoviesDetailsPage';
-import LoginPage from './code/screens/LoginPage';
+import HomePage from './code/screens/HomePage.tsx';
+import SearchPage from './code/screens/SearchPage.tsx';
+import WishlistPage from './code/screens/WishlistPage.tsx';
+import MoviesDetailsPage from './code/screens/MoviesDetailsPage.tsx';
+import LoginPage from './code/screens/LoginPage.tsx';
+import SignUpPage from './code/screens/SignUpPage.tsx';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-const TabNavigator = () => (
+const TabNavigator: React.FC = () => (
   <Tab.Navigator
     screenOptions={({ route }) => ({
       tabBarIcon: ({ focused, color, size }) => {
@@ -27,7 +30,6 @@ const TabNavigator = () => (
           iconName = focused ? 'heart' : 'heart-outline';
         }
 
-        // Return the appropriate icon component
         return <Icon name={iconName} size={size} color={color} />;
       },
       tabBarActiveTintColor: 'tomato',
@@ -40,13 +42,29 @@ const TabNavigator = () => (
   </Tab.Navigator>
 );
 
-const App = () => {
+const App: React.FC = () => {
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="HomeTabs" component={TabNavigator} options={{ headerShown: false }} />
+        <Stack.Screen
+          name="HomeTabs"
+          component={TabNavigator}
+          options={({ navigation }) => ({
+            headerTitle: 'MOVIE REC APP',
+            headerTitleStyle: { fontWeight: 'bold', fontSize: 20 },
+            headerStyle: { backgroundColor: '#f8f8f8' },
+            headerRight: () => (
+              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                <Text style={{ marginRight: 10, color: 'blue', fontSize: 16 }}>Log In</Text>
+              </TouchableOpacity>
+            ),
+            headerRightContainerStyle: { paddingRight: 10 },
+          })}
+        />
         <Stack.Screen name="MoviesDetails" component={MoviesDetailsPage} />
-        {/* You can add more screens here that shouldn't be in the tab navigator */}
+        <Stack.Screen name="Login" component={LoginPage} />
+        <Stack.Screen name="SignUp" component={SignUpPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );

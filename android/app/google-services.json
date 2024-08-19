@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "633460028091",
+    "project_id": "movie-recommender-f3642",
+    "storage_bucket": "movie-recommender-f3642.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:633460028091:android:25e1168de4a00cc680ef9e",
+        "android_client_info": {
+          "package_name": "com.movie_recommender"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjOREX73WkulXATLoMviLvX9n7pCKS4DI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

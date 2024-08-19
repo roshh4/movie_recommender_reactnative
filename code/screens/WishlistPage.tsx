@@ -4,7 +4,7 @@ const WishlistPage = () => {
 
   return (
     <View>
-      <Text>this is homepage</Text>
+      <Text>this is wishlist</Text>
     </View>
   );
 };

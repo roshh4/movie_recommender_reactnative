@@ -3,27 +3,35 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 
-type LoginPageProps = {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>;
+type SignUpPageProps = {
+  navigation: NativeStackNavigationProp<RootStackParamList, 'SignUp'>;
 };
 
-const LoginPage: React.FC<LoginPageProps> = ({ navigation }) => {
+const SignUpPage: React.FC<SignUpPageProps> = ({ navigation }) => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const handleLogin = () => {
-    // Add login logic here
-    console.log('Email:', email);
-    console.log('Password:', password);
-  };
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleSignUp = () => {
-    navigation.navigate('SignUp');
+    // Add sign-up logic here
+    console.log('Name:', name);
+    console.log('Email:', email);
+    console.log('Password:', password);
+    console.log('Confirm Password:', confirmPassword);
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>Sign Up</Text>
+
+      <TextInput
+        style={styles.input}
+        placeholder="Name"
+        value={name}
+        onChangeText={setName}
+        autoCapitalize="words"
+      />
 
       <TextInput
         style={styles.input}
@@ -43,12 +51,21 @@ const LoginPage: React.FC<LoginPageProps> = ({ navigation }) => {
         autoCapitalize="none"
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Confirm Password"
+        value={confirmPassword}
+        onChangeText={setConfirmPassword}
+        secureTextEntry
+        autoCapitalize="none"
+      />
+
+      <TouchableOpacity style={styles.button} onPress={handleSignUp}>
+        <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={handleSignUp}>
-        <Text style={styles.signUpText}>New to the app? Sign up here</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+        <Text style={styles.loginText}>Already have an account? Log in here</Text>
       </TouchableOpacity>
     </View>
   );
@@ -88,11 +105,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-  signUpText: {
+  loginText: {
     textAlign: 'center',
     color: '#6200ee',
     marginTop: 10,
   },
 });
 
-export default LoginPage;
+export default SignUpPage;
