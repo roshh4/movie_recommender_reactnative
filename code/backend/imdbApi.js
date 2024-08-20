@@ -1,14 +1,36 @@
 import axios from 'axios';
 
-const omdb_api = 'dedb1911';
-const baseURL = 'http://www.omdbapi.com/';
+const tmdb_api_key = '4e7379a42eb65fae330e75c6a228d5cc';
+const baseURL = 'https://api.themoviedb.org/3';
 
-export const searchMovies = async (query) => {
+// Function to search for movies using the TMDb API
+export const searchMovies = async (query: string) => {
   try {
-    const response = await axios.get(`${baseURL}?s=${query}&apikey=${omdb_api}`);
-    return response.data;
+    const response = await axios.get(`${baseURL}/search/movie`, {
+      params: {
+        api_key: tmdb_api_key,
+        query: query,
+      },
+    });
+    console.log(response.data.results);
+    return response.data.results;
   } catch (error) {
     console.error('Search error:', error);
+    return [];
+  }
+};
+
+// Function to fetch top-rated movies using the TMDb API
+export const fetchTopMovies = async () => {
+  try {
+    const response = await axios.get(`${baseURL}/movie/top_rated`, {
+      params: {
+        api_key: tmdb_api_key,
+      },
+    });
+    return response.data.results;
+  } catch (error) {
+    console.error('Top movies error:', error);
     return [];
   }
 };

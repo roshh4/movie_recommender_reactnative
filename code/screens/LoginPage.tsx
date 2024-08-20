@@ -14,7 +14,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ navigation }) => {
   const { setUser } = useAuth();
 
   const handleLogin = () => {
-\    console.log('Email:', email);
+    console.log('Email:', email);
     console.log('Password:', password);
 
     setUser(email);
@@ -31,7 +31,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ navigation }) => {
 
       <TextInput
         style={styles.input}
-        placeholder="Email"
+        placeholder="Username"
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"

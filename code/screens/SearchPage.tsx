@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, FlatList, Text, StyleSheet, Image } from 'react-native';
-import { searchMovies } from '../backend/imdbApi';
+import { searchMovies } from '../backend/imdbApi'; // Ensure this path is correct
 
 const SearchPage = () => {
   const [query, setQuery] = useState('');
-  const [movies, setMovies] = useState([]);
+  const [movies, setMovies] = useState<any[]>([]);
 
   const handleSearch = async () => {
     try {
-      const data = await searchMovies(query);
-      setMovies(data.Search || []);
+      const response = await searchMovies(query);
+      setMovies(response.results || []); // Access `results` from the response
     } catch (error) {
       console.error('Search error:', error);
     }
@@ -26,17 +26,19 @@ const SearchPage = () => {
       <Button title="Search" onPress={handleSearch} />
       <FlatList
         data={movies}
-        keyExtractor={(item) => item.imdbID}
+        keyExtractor={(item) => item.id.toString()} // Ensure `id` is a string
         numColumns={2}
         renderItem={({ item }) => (
           <View style={styles.movieItem}>
             <Image
-              source={{ uri: item.Poster }}
+              source={{ uri: `https://image.tmdb.org/t/p/w500${item.poster_path}` }}
               style={styles.poster}
             />
-            <Text style={styles.movieTitle}>{item.Title}</Text>
+            <Text style={styles.movieTitle}>{item.title}</Text>
           </View>
         )}
+        ListEmptyComponent={<Text>No movies found.</Text>}
+        contentContainerStyle={movies.length === 0 ? styles.emptyList : {}}
       />
     </View>
   );
@@ -64,6 +66,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
     marginTop: 10,
+  },
+  emptyList: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
   },
 });
 
