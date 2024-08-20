@@ -1,31 +1,56 @@
-const admin = require('firebase-admin');
-const serviceAccount = require('./serviceAccountKey.json');
+import firestore from '@react-native-firebase/firestore';
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
+export const addUserToFirestore = async (name, email, password, confirmPassword) => {
+  if (!name || !email || !password || !confirmPassword) {
+    return { success: false, message: 'Please fill in all fields.' };
+  }
 
-const db = admin.firestore();
-const usersCollection = db.collection('users');
+  if (password !== confirmPassword) {
+    return { success: false, message: 'Passwords do not match.' };
+  }
 
-const addUser = async (userData) => {
-    await usersCollection.add(userData);
-};
+  try {
+    const userRef = firestore().collection('users');
+    const userSnapshot = await userRef.where('email', '==', email).get();
 
-const getUser = async (userId) => {
-    const userDoc = await usersCollection.doc(userId).get();
-    if (!userDoc.exists) {
-        throw new Error('User not found');
+    if (!userSnapshot.empty) {
+      return { success: false, message: 'Email is already registered.' };
     }
-    return userDoc.data();
+
+    // need to hash
+    await userRef.add({
+      name,
+      email,
+      password,
+    });
+
+    return { success: true, message: 'User registered successfully!' };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
 };
 
-const updateUser = async (userId, userData) => {
-    await usersCollection.doc(userId).update(userData);
-};
+export const loginUser = async (username, password) => {
+  if (!username || !password) {
+    return { success: false, message: 'Please fill in all fields.' };
+  }
 
-module.exports = {
-    addUser,
-    getUser,
-    updateUser
+  try {
+    const userRef = firestore().collection('users');
+    const userSnapshot = await userRef.where('name', '==', username).get();
+
+    if (userSnapshot.empty) {
+      return { success: false, message: 'Username is not registered.' };
+    }
+
+    const userData = userSnapshot.docs[0].data();
+
+    if (userData.password !== password) {  // Replace this with isPasswordCorrect after hashing
+      return { success: false, message: 'Incorrect password.' };
+    }
+
+    return { success: true, message: 'Login successful!' };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
 };

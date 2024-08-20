@@ -12,6 +12,7 @@ import WishlistPage from './code/screens/WishlistPage.tsx';
 import MoviesDetailsPage from './code/screens/MoviesDetailsPage.tsx';
 import LoginPage from './code/screens/LoginPage.tsx';
 import SignUpPage from './code/screens/SignUpPage.tsx';
+import { AuthProvider, useAuth } from './code/components/AuthContext.tsx';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -43,30 +44,38 @@ const TabNavigator: React.FC = () => (
 );
 
 const App: React.FC = () => {
-
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="HomeTabs"
-          component={TabNavigator}
-          options={({ navigation }) => ({
-            headerTitle: 'MOVIE REC APP',
-            headerTitleStyle: { fontWeight: 'bold', fontSize: 20 },
-            headerStyle: { backgroundColor: '#f8f8f8' },
-            headerRight: () => (
-              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                <Text style={{ marginRight: 10, color: 'blue', fontSize: 16 }}>Log In</Text>
-              </TouchableOpacity>
-            ),
-            headerRightContainerStyle: { paddingRight: 10 },
-          })}
-        />
-        <Stack.Screen name="MoviesDetails" component={MoviesDetailsPage} />
-        <Stack.Screen name="Login" component={LoginPage} />
-        <Stack.Screen name="SignUp" component={SignUpPage} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <AuthProvider>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="HomeTabs"
+            component={TabNavigator}
+            options={({ navigation }) => {
+              const { user } = useAuth();
+              return {
+                headerTitle: 'MOVIE REC APP',
+                headerTitleStyle: { fontWeight: 'bold', fontSize: 20 },
+                headerStyle: { backgroundColor: '#f8f8f8' },
+                headerRight: () => (
+                  user ? (
+                    <Text style={{ marginRight: 10, color: 'blue', fontSize: 16 }}>{user}</Text>
+                  ) : (
+                    <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                      <Text style={{ marginRight: 10, color: 'blue', fontSize: 16 }}>Log In</Text>
+                    </TouchableOpacity>
+                  )
+                ),
+                headerRightContainerStyle: { paddingRight: 10 },
+              };
+            }}
+          />
+          <Stack.Screen name="MoviesDetails" component={MoviesDetailsPage} />
+          <Stack.Screen name="Login" component={LoginPage} />
+          <Stack.Screen name="SignUp" component={SignUpPage} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AuthProvider>
   );
 };
 

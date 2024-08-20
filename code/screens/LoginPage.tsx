@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
+import { useAuth } from '../components/AuthContext';
 
 type LoginPageProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>;
@@ -10,11 +11,14 @@ type LoginPageProps = {
 const LoginPage: React.FC<LoginPageProps> = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { setUser } = useAuth();
 
   const handleLogin = () => {
-    // Add login logic here
-    console.log('Email:', email);
+\    console.log('Email:', email);
     console.log('Password:', password);
+
+    setUser(email);
+    navigation.goBack();
   };
 
   const handleSignUp = () => {
