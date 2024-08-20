@@ -1,76 +1,83 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
-import { fetchTopMovies } from 'code/backend/imdbApi';
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, Image, StyleSheet, ScrollView } from 'react-native';
+import { getPopularMovies, getTopRatedMovies } from '../backend/imdbApi'; // Adjust the path as necessary
 
-const HomePage: React.FC = () => {
-  const [topMovies, setTopMovies] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+const HomePage = () => {
+  const [popularMovies, setPopularMovies] = useState([]);
+  const [topRatedMovies, setTopRatedMovies] = useState([]);
 
   useEffect(() => {
-    const loadTopMovies = async () => {
+    const fetchMovies = async () => {
       try {
-        const data = await fetchTopMovies();
-        setTopMovies(data.Search || []);
-      } catch (err) {
-        setError('Failed to load top movies');
-      } finally {
-        setLoading(false);
+        const popularData = await getPopularMovies();
+        setPopularMovies(popularData);
+
+        const topRatedData = await getTopRatedMovies();
+        setTopRatedMovies(topRatedData);
+      } catch (error) {
+        console.error('Error fetching movies:', error);
       }
     };
 
-    loadTopMovies();
+    fetchMovies();
   }, []);
 
-  if (loading) {
-    return <Text>Loading...</Text>;
-  }
-
-  if (error) {
-    return <Text>{error}</Text>;
-  }
+  const renderMovieItem = ({ item }) => (
+    <View style={styles.movieItem}>
+      <Image
+        source={{ uri: `https://image.tmdb.org/t/p/w500${item.poster_path}` }}
+        style={styles.poster}
+      />
+      <Text style={styles.movieTitle}>{item.title}</Text>
+    </View>
+  );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Top Movies</Text>
+    <ScrollView style={styles.container}>
+      <Text style={styles.header}>Popular Movies</Text>
       <FlatList
-        data={topMovies}
-        keyExtractor={(item) => item.imdbID}
-        renderItem={({ item }) => (
-          <View style={styles.movieItem}>
-            <Text style={styles.movieTitle}>{item.Title}</Text>
-            <Text>{item.Year}</Text>
-          </View>
-        )}
+        data={popularMovies}
+        keyExtractor={(item) => item.id.toString()}
+        horizontal
+        renderItem={renderMovieItem}
+        showsHorizontalScrollIndicator={false}
       />
-    </View>
+
+      <Text style={styles.header}>Top Rated Movies</Text>
+      <FlatList
+        data={topRatedMovies}
+        keyExtractor={(item) => item.id.toString()}
+        horizontal
+        renderItem={renderMovieItem}
+        showsHorizontalScrollIndicator={false}
+      />
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-    backgroundColor: '#f2f2f2',
+    padding: 20,
   },
-  title: {
+  header: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 16,
+    marginBottom: 10,
   },
   movieItem: {
-    padding: 16,
-    marginBottom: 8,
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    marginRight: 10,
+    alignItems: 'center',
+  },
+  poster: {
+    width: 150,
+    height: 225,
+    borderRadius: 10,
   },
   movieTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    marginTop: 5,
+    fontSize: 16,
+    textAlign: 'center',
   },
 });
 

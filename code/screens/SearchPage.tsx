@@ -9,7 +9,7 @@ const SearchPage = () => {
   const handleSearch = async () => {
     try {
       const response = await searchMovies(query);
-      setMovies(response.results || []); // Access `results` from the response
+      setMovies(response);
     } catch (error) {
       console.error('Search error:', error);
     }
@@ -23,10 +23,11 @@ const SearchPage = () => {
         onChangeText={setQuery}
         style={styles.input}
       />
+
       <Button title="Search" onPress={handleSearch} />
       <FlatList
         data={movies}
-        keyExtractor={(item) => item.id.toString()} // Ensure `id` is a string
+        keyExtractor={(item) => item.id.toString()}
         numColumns={2}
         renderItem={({ item }) => (
           <View style={styles.movieItem}>
