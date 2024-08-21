@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, Image, StyleSheet, ScrollView } from 'react-native';
-import { getPopularMovies, getTopRatedMovies } from '../backend/imdbApi'; // Adjust the path as necessary
+import { View, Text, FlatList, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { getPopularMovies, getTopRatedMovies } from '../backend/imdbApi';
 
-const HomePage = () => {
+const HomePage = ({ navigation }) => {
   const [popularMovies, setPopularMovies] = useState([]);
   const [topRatedMovies, setTopRatedMovies] = useState([]);
 
@@ -23,13 +23,16 @@ const HomePage = () => {
   }, []);
 
   const renderMovieItem = ({ item }) => (
-    <View style={styles.movieItem}>
+    <TouchableOpacity
+      style={styles.movieItem}
+      onPress={() => navigation.navigate('MoviesDetails', { movieId: item.id })}
+    >
       <Image
         source={{ uri: `https://image.tmdb.org/t/p/w500${item.poster_path}` }}
         style={styles.poster}
       />
       <Text style={styles.movieTitle}>{item.title}</Text>
-    </View>
+    </TouchableOpacity>
   );
 
   return (

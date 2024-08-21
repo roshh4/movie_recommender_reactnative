@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, FlatList, Text, StyleSheet, Image } from 'react-native';
-import { searchMovies } from '../backend/imdbApi'; // Ensure this path is correct
+import { View, TextInput, Button, FlatList, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { searchMovies } from '../backend/imdbApi';
+import { useNavigation } from '@react-navigation/native';
 
 const SearchPage = () => {
   const [query, setQuery] = useState('');
   const [movies, setMovies] = useState<any[]>([]);
+  const navigation = useNavigation();
 
   const handleSearch = async () => {
     try {
@@ -13,6 +15,10 @@ const SearchPage = () => {
     } catch (error) {
       console.error('Search error:', error);
     }
+  };
+
+  const handleMoviePress = (movie) => {
+    navigation.navigate('MoviesDetails', { movieId: movie.id });
   };
 
   return (
@@ -30,13 +36,13 @@ const SearchPage = () => {
         keyExtractor={(item) => item.id.toString()}
         numColumns={2}
         renderItem={({ item }) => (
-          <View style={styles.movieItem}>
+          <TouchableOpacity onPress={() => handleMoviePress(item)} style={styles.movieItem}>
             <Image
               source={{ uri: `https://image.tmdb.org/t/p/w500${item.poster_path}` }}
               style={styles.poster}
             />
             <Text style={styles.movieTitle}>{item.title}</Text>
-          </View>
+          </TouchableOpacity>
         )}
         ListEmptyComponent={<Text>No movies found.</Text>}
         contentContainerStyle={movies.length === 0 ? styles.emptyList : {}}

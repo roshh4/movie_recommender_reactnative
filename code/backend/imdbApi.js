@@ -48,3 +48,18 @@ export const getTopRatedMovies = async () => {
     return [];
   }
 };
+
+//Function to fetch movie details
+export const fetchMovieDetails = async (movieId: string) => {
+  try {
+    const response = await axios.get(`${baseURL}/movie/${movieId}`, {
+      params: {
+        api_key: tmdb_api_key,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching movie details:', error);
+    throw error;
+  }
+};
